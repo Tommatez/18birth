@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎭 18 — TOMAS — Fiesta de Disfraces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Metamorphous&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=New+Rocker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<div class="teaser-overlay" id="teaser-overlay">
+  <div class="teaser-mask">🎭</div>
+  <p class="teaser-sub">Algo se acerca</p>
+  <p class="teaser-text">
+    Hay una fecha que todavía no puedo revelar.<br>
+    Hay un lugar que se mantiene en secreto.<br>
+    Lo único que necesito de vos, por ahora, es una respuesta.
+  </p>
+  <a href="#" class="btn-primary" onclick="closeTeaser(event)">Confirmar mi asistencia</a>
+</div>
+<!-- ── NAV ── -->
+<nav>
+  <a href="#hero" class="nav-logo">🌕 18</a>
+  <ul class="nav-links">
+    <li><a href="#info-section">Info</a></li>
+    <li><a href="#rsvp-section">Confirmar</a></li>
+<!--     <li><a href="#music-section">Música</a></li>
+    <li><a href="#quiz-section">Quiz</a></li>
+    <li><a href="#bingo-section">Bingo</a></li>
+    <li><a href="#fotos-section">Fotos</a></li> -->
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<div id="hero">
+  <div class="hero-18" aria-hidden="true">18</div>
+  <div class="hero-mask" aria-label="Máscara de fiesta"><img src="skull.png" alt="Máscara de fiesta"></div>
+  <p class="hero-subtitle">Estas invitado personalmente por vuestro anfitrión</p>
+  <h1 class="hero-name">TOMAS</h1>
+  <p class="hero-subtitle" style="font-size:0.75rem;letter-spacing:0.5em;margin-top:0.5rem">a su fiesta de Disfraces</p>
+
+  <div class="hero-divider"></div>
+
+  <div class="hero-date-block">
+    <div class="hero-detail">
+      <span class="hero-detail-label">Fecha</span>
+      <span class="hero-detail-value"> + 5 / 12 / 2026 + </span>
+    </div>
+    <div class="countdown-sep">·</div>
+    <div class="hero-detail">
+      <span class="hero-detail-label">Hora</span>
+      <span class="hero-detail-value"> + 21 : 00 hs + </span>
+    </div>
+    <div class="countdown-sep">·</div>
+    <div class="hero-detail">
+      <span class="hero-detail-label">Lugar</span>
+      <span class="hero-detail-value"> + Rembrandt 5885, Francisco Alvarez + </span>
+    </div>
+  </div>
+
+  <div class="hero-divider"></div>
+
+  <div class="countdown-row" id="countdown-hero">
+    <div class="countdown-block"><span class="countdown-num" id="cd-temporal">--</span><span class="countdown-label">Muy pronto</span></div>
+     <div class="countdown-block"><span class="countdown-num" id="cd-days">--</span><span class="countdown-label">Días</span></div>
+    <div class="countdown-sep" style="font-size:2rem;opacity:0.3;align-self:center">:</div>
+    <div class="countdown-block"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-label">Horas</span></div>
+    <div class="countdown-sep" style="font-size:2rem;opacity:0.3;align-self:center">:</div>
+    <div class="countdown-block"><span class="countdown-num" id="cd-mins">--</span><span class="countdown-label">Min</span></div>
+    <div class="countdown-sep" style="font-size:2rem;opacity:0.3;align-self:center">:</div>
+    <div class="countdown-block"><span class="countdown-num" id="cd-secs">--</span><span class="countdown-label">Seg</span></div>
+  </div>
+
+  <a href="#rsvp-section" class="btn-primary" style="margin-top:2rem">Confirmar asistencia</a>
+</div>
+
+<section id="info-section" class="fade-in">
+  <span class="section-tag">El evento</span>
+  <h2 class="section-title">Detalles de la noche</h2>
+  <div class="section-line"></div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-icon">📍</div>
+      <div class="info-card-title">Lugar</div>
+      <div class="info-card-highlight">Quinta Luna <!-- [Nombre del Salón] --></div>
+      <div class="info-card-text"> Rembrandt 5885, Francisco Alvarez<!-- [Dirección completa] --><br> <a href="https://maps.app.goo.gl/RoXERcvztbZu464MA" target="_blank">Ver en Google Maps</a> <!-- [Descripción de la fachada] --></div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🕘</div>
+      <div class="info-card-title">Horario</div>
+      <div class="info-card-highlight">21:00hs (nueve de la noche) <!-- [Horario] --></div>
+      <div class="info-card-text">El ingreso comienza a una hora en especifico. Trata de ser puntual, te vamos a estar esperando.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🎭</div>
+      <div class="info-card-title">Código de vestimenta</div>
+      <div class="info-card-highlight">Disfraz obligatorio</div>
+      <div class="info-card-text">Si no venis disfrazado no entras. Sea lo que sea — ¡Media pila! Va a haber premio al mejor disfraz.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🎁</div>
+      <div class="info-card-title">Regalos?</div>
+      <div class="info-card-highlight">No hace falta!</div>
+      <div class="info-card-text">Lo que más quiero es tu presencia. Por eso, no existe regalo que pueda compararse con tu compañía. No es obligatorio, pero si pinta: <h3><u>Tomas.tomate.qso</u></h3> </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🍾</div>
+      <div class="info-card-title">Bebidas & Catering</div>
+      <div class="info-card-highlight">Lo ideal es traer tu bebida favorita</div>
+      <div class="info-card-text">No te olvides de traer tu bebida favorita para disfrutar de la noche juntos, nosotros nos encargamos del resto. La comida corre por nuestra cuenta pero la sed por la tuya.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">📸</div>
+      <div class="info-card-title">Fotógrafo</div>
+      <div class="info-card-highlight">Usa tu celular</div>
+      <div class="info-card-text">Queremos que cada uno de ustedes sea fotografo esta noche, suban las fotos aca y el dia siguiente apareceran todas abajo. Quien sabe, la mejor foto puede ganar un premio.</div>
+    </div>
+  </div>
+  <div class="info-advertencia">
+    <div class="info-advertencia-icon">⚠️</div>
+    <div class="info-advertencia-body">
+      <div class="info-advertencia-title">Disfraces prohibidos</div>
+      <div class="info-advertencia-highlight">Como en todo evento especial — acá hay un anfitrión con disfraz reservado.</div>
+      <div class="info-advertencia-list">
+        <span> + La Parca / Muerte con guadaña</span>
+        <span> + Doctor loco</span>
+        <span> + Vampiro clásico de capa negra</span>
+        <span> + Representaciones vudú</span>
+      </div>
+      <div class="info-advertencia-nota">¿Dudás si tu disfraz entra en la lista? Consultá antes al confirmar tu asistencia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RSVP ── -->
+<section class="fade-in" style="padding-top:0">
+  <span class="section-tag">¿Venís?</span>
+  <h2 class="section-title">Confirmá tu asistencia</h2>
+  <div class="section-line"></div>
+
+  <div id="rsvp-section">
+    <div id="rsvp-form-wrap">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Nombre completo *</label>
+          <input type="text" class="form-input" id="rsvp-name" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono / WhatsApp</label>
+          <input type="tel" class="form-input" id="rsvp-tel" placeholder="+54 ...">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="rsvp-email" placeholder="tu@mail.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">¿Venís? *</label>
+          <select class="form-select" id="rsvp-attend">
+            <option value="">— Seleccioná —</option>
+            <option value="si">✅ ¡Sí, voy!</option>
+            <option value="no">❌ No puedo ir</option>
+            <option value="tal_vez">⏳ Tal vez (entonces no mandes tu confirmacion aun)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" id="disfraz-group">
+        <label class="form-label">Tiene mas sorpresa si no avisas, pero si tenes dudas respecto a tu disfraz, ¿De que te vas a disfrazar?</label>
+        <input type="text" class="form-input" id="rsvp-costume" placeholder="Ej: pirata, superhéroe, personaje de los 90s...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Restricciones alimentarias</label>
+        <input type="text" class="form-input" id="rsvp-food" placeholder="Vegano, celíaco, sin lactosa... (opcional)">
+      </div> 
+      <div class="form-group">
+        <label class="form-label">Mensaje para Tomas 🎂</label>
+        <textarea class="form-textarea" id="rsvp-msg" rows="3" placeholder="Dejale un mensaje de cumpleaños..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="submitRSVP()" style="width:100%;text-align:center;justify-content:center">Confirmar asistencia</button>
+    </div>
+
+    <div class="rsvp-success" id="rsvp-success">
+      <div class="rsvp-success-icon">🌑</div>
+      <h3>¡Perfecto, te esperamos!</h3>
+      <p style="color:var(--text-muted);margin-top:0.5rem">Tu confirmación fue enviada. <span id="success-name"></span></p>
+    </div>
+  </div>
+</section>
+
+<!--  ── MÚSICA ── 
+<section id="music-section" class="fade-in">
+  <span class="section-tag">Para el DJ</span>
+  <h2 class="section-title">Pedí tu canción</h2>
+  <div class="section-line"></div>
+
+  <div class="music-container">
+    <div class="music-tabs">
+      <button class="music-tab active" onclick="switchMusicTab(this,'search-panel')">🔍 Buscar</button>
+      <button class="music-tab" onclick="switchMusicTab(this,'queue-panel')">🎵 Cola (<span id="queue-count">0</span>)</button>
+      <button class="music-tab" onclick="switchMusicTab(this,'karaoke-panel')">🎤 Karaoke</button>
+    </div>
+
+    <div class="music-panel active" id="search-panel">
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.5rem">Buscá cualquier canción y agregala a la cola del DJ. También podés pedir para el karaoke.</p>
+      <div class="search-bar">
+        <input type="text" id="music-search-input" placeholder="Artista, canción, género..." onkeydown="if(event.key==='Enter')searchSongs()">
+        <button class="search-btn" onclick="searchSongs()">Buscar</button>
+      </div>
+      <div id="song-list" class="song-list">
+        <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0">Escribí una canción o artista para buscar 🎶</p>
+      </div>
+    </div>
+
+    <div class="music-panel" id="queue-panel">
+      <div id="queue-list" class="queue-list">
+        <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:2rem 0">La cola está vacía. ¡Pedí canciones! 🎵</p>
+      </div>
+      <button class="dj-export-btn" onclick="exportQueueForDJ()">📋 Exportar lista para el DJ</button>
+    </div>
+
+    <div class="music-panel" id="karaoke-panel">
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.5rem">Anotate para el karaoke. El DJ irá llamando en orden.</p>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label class="form-label">Tu nombre</label>
+        <input type="text" class="form-input" id="karaoke-name" placeholder="¿Quién canta?">
+      </div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label class="form-label">Canción para cantar</label>
+        <input type="text" class="form-input" id="karaoke-song" placeholder="Nombre de la canción y artista">
+      </div>
+      <button class="btn-primary" onclick="addKaraoke()" style="width:100%;text-align:center">🎤 Anotarme al karaoke</button>
+      <div id="karaoke-list" style="margin-top:1.5rem;display:flex;flex-direction:column;gap:0.5rem"></div>
+    </div>
+  </div>
+</section>
+
+ ── QUIZ ── 
+<section id="quiz-section" class="fade-in">
+  <span class="section-tag">¿Cuánto lo conocés?</span>
+  <h2 class="section-title">Quiz del Cumpleañero</h2>
+  <div class="section-line"></div>
+
+  <div class="quiz-card">
+    <div class="quiz-progress" id="quiz-progress"></div>
+    <div id="quiz-content">
+      <p class="quiz-q" id="quiz-question"></p>
+      <div class="quiz-options" id="quiz-options"></div>
+      <button class="btn-primary" onclick="nextQuestion()" id="quiz-next" style="display:none">Siguiente →</button>
+    </div>
+    <div class="quiz-result" id="quiz-result">
+      <p style="font-size:0.8rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:0.5rem">Tu puntaje</p>
+      <div class="quiz-score" id="quiz-score">0/0</div>
+      <p style="color:var(--text-muted);margin-top:1rem;font-size:0.9rem" id="quiz-verdict"></p>
+      <button class="btn-primary" onclick="restartQuiz()" style="margin-top:1.5rem">Jugar de nuevo</button>
+    </div>
+  </div>
+</section>
+
+ ── BINGO ── 
+<section id="bingo-section" class="fade-in">
+  <span class="section-tag">Juego colectivo</span>
+  <h2 class="section-title">Bingo de la Fiesta</h2>
+  <div class="section-line"></div>
+  <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;max-width:500px;margin:0 auto 2rem">Marcá los casilleros cuando sucedan esas cosas en la fiesta. ¡El primero en hacer línea gana!</p>
+
+  <div class="bingo-container">
+    <div class="bingo-header">
+      <div class="bingo-name">
+        <span>B</span><span>I</span><span>N</span><span>G</span><span>O</span>
+      </div>
+      <button class="btn-primary" onclick="shuffleBingo()" style="padding:0.5rem 1.5rem;font-size:0.75rem">🔀 Mezclar</button>
+    </div>
+    <div class="bingo-grid" id="bingo-grid"></div>
+    <p class="bingo-announce" id="bingo-announce">🎉 ¡BINGO!</p>
+  </div>
+</section>
+
+ ── FOTOS ── 
+<section id="fotos-section" class="fade-in">
+  <span class="section-tag">Galería</span>
+  <h2 class="section-title">Fotos de la noche</h2>
+  <div class="section-line"></div>
+  <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;max-width:500px;margin:0 auto 2rem">Subí tus fotos de la fiesta y completemos la galeria.</p>
+
+  <div class="photo-grid" id="photo-grid">
+    <label class="photo-item photo-upload-zone" style="grid-column: 1 / -1;aspect-ratio:auto;border-style:dashed">
+      <input type="file" id="photo-upload" accept="image/*" multiple onchange="handlePhotoUpload(event)">
+      <span class="photo-emoji">📷</span>
+      <span class="photo-placeholder">Hacé click o arrastrá fotos aquí<br><span style="color:var(--gold)">Subir imágenes</span></span>
+    </label>
+  </div>
+</section> -->
+<section class="build">
+  <div class="build-div">
+    <p class="build-title">🔒</p>
+    <p class="build-p1">Sección en construcción</p>
+    <p class="build-p2">
+      El quiz, la música para el DJ y la galería de fotos entre otras opciones<br>
+      se van a desbloquear el día de la fiesta.
+    </p>
+  </div>
+</section>
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-mask">🎭</div>
+  <p>Con mucho cariño, para <strong style="color:var(--signal)">Cada uno de ustedes</strong> — 18 años</p>
+  <p style="margin-top:0.5rem;font-size:0.7rem;opacity:0.5"> 26 de noviembre de 2026 </p>
+</footer>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── MODAL FOTO ── -->
+<div class="modal-overlay" id="photo-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('photo-modal')">✕</button>
+    <img id="modal-photo-img" style="width:100%;max-height:70vh;object-fit:contain;" src="" alt="">
+  </div>
+</div>
+
+<!-- ── MODAL DJ EXPORT ── -->
+<div class="modal-overlay" id="dj-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('dj-modal')">✕</button>
+    <h3 style="font-family:'Cinzel Decorative',serif;color:var(--gold);margin-bottom:1.5rem;font-size:1rem">🎧 Lista para el DJ</h3>
+    <div id="dj-export-content" style="font-family:'DM Sans',sans-serif;font-size:0.85rem;line-height:2;color:var(--cream2);white-space:pre-wrap"></div>
+    <button class="btn-primary" onclick="copyDJList()" style="margin-top:1.5rem;width:100%;text-align:center">📋 Copiar al portapapeles</button>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  emailjs.init('6uTnYOTEhQC_wGS2W'); // ← pegás tu clave acá
+</script>
+<script src="script.js"></script>
+</body>
+</html>
