@@ -487,9 +487,11 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 function closeTeaser(e) {
   e.preventDefault();
-  document.getElementById('teaser-overlay').remove();
+  const overlay = document.getElementById('teaser-overlay');
+  overlay.style.opacity = '0';
   document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
   setTimeout(() => {
-    document.getElementById('rsvp-section').scrollIntoView({ behavior: 'smooth' });
-  }, 50);
+    overlay.remove();
+    window.scrollTo({ top:0, behavior: 'smooth' });
+  }, 800); // espera a que termine el fade
 }
