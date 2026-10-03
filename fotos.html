@@ -32,8 +32,8 @@ nav {
     text-transform: uppercase;
     transition: color 0.2s;
   }
-  .nav-back a:hover { color: var(--star); }
-  .nav-logo a:hover { color: var(--star); }
+  .nav-back:hover { color: var(--star); }
+  .nav-logo:hover { color: var(--star); }
 
 .page-hero { position: relative; z-index: 1; padding: 8rem 2rem 4rem; text-align: center; }
 .page-tag { font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--star); display: block; margin-bottom: 0.5rem; }
@@ -148,6 +148,14 @@ footer { position: relative; z-index: 1; text-align: center; padding: 2rem; bord
   nav { padding: 0.75rem 1rem; }
 }
 
+.camera-btn {
+  display: block; width: 100%; margin-top: 0.75rem; padding: 0.9rem 1rem;
+  background: linear-gradient(135deg, var(--colour), var(--colour-bright)); border: none; color: #fff;
+  font-family: 'New Rocker', system-ui; font-size: 1.05rem; letter-spacing: 0.08em;
+  cursor: pointer; text-align: center; transition: transform 0.2s;
+}
+.camera-btn:hover { transform: scale(1.02); }
+
 /* ===== 🔒 CANDADO (borrá o comentá este bloque CSS junto con el bloque HTML del candado) ===== */
 .upload-lock {
   position: absolute; inset: 0 2rem; z-index: 5;
@@ -184,7 +192,7 @@ footer { position: relative; z-index: 1; text-align: center; padding: 2rem; bord
     <div class="upload-lock-title">Subida bloqueada</div>
     <div class="upload-lock-text">Se habilita el día de la fiesta.<br>Mientras tanto podés ver la galería.</div>
   </div>
-  ===== FIN CANDADO ===== -->  <!---->
+   ===== FIN CANDADO ===== --> 
   <div class="upload-name-wrap">
     <input type="text" class="upload-name-input" id="photographer-name" placeholder="Tu nombre (aparece en la foto)">
   </div>
@@ -196,6 +204,8 @@ footer { position: relative; z-index: 1; text-align: center; padding: 2rem; bord
       <span style="font-size:0.8rem">JPG, PNG, WebP · Máx 10MB por foto</span>
     </p>
   </label>
+  <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+  <button type="button" class="camera-btn" id="camera-btn">📸 Sacar una foto</button>
   <div class="upload-progress" id="upload-progress">
     <div class="upload-progress-bar" id="upload-progress-bar"></div>
   </div>
@@ -327,6 +337,20 @@ uploadZone.addEventListener('drop', e => {
   handleFiles(Array.from(e.dataTransfer.files));
 });
 photoInput.addEventListener('change', e => handleFiles(Array.from(e.target.files)));
+const cameraInput = document.getElementById('camera-input');
+
+document.getElementById('camera-btn').addEventListener('click', () => {
+  if (document.getElementById('upload-lock')) { showToast('La subida está bloqueada por ahora 🔒'); return; }
+  const nameInput = document.getElementById('photographer-name');
+  if (!nameInput.value.trim()) { showToast('Primero escribí tu nombre 📝'); nameInput.focus(); return; }
+  cameraInput.click();
+});
+
+cameraInput.addEventListener('change', e => {
+  const files = Array.from(e.target.files);
+  e.target.value = '';
+  handleFiles(files);
+});
 
 async function handleFiles(files) {
   if (document.getElementById('upload-lock')) { showToast('La subida está bloqueada por ahora 🔒'); photoInput.value = ''; return; }
