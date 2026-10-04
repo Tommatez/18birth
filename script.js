@@ -161,41 +161,52 @@ updateCountdown();
 setInterval(updateCountdown, 1000);
 
 // ─── RSVP ─────────────────────────────────────────────────────────
+let rsvpBusy = false;   // evita que un doble click gaste dos números de invitado
 async function submitRSVP() {
+  if (rsvpBusy) return;
   const name = document.getElementById('rsvp-name').value.trim();
   const attend = document.getElementById('rsvp-attend').value;
   if (!name || !attend) { showToast('Por favor completá nombre y asistencia 🎭'); return; }
+  rsvpBusy = true;
 
   const costume = document.getElementById('rsvp-costume').value;
   const msg = document.getElementById('rsvp-msg').value;
   const email = document.getElementById('rsvp-email').value;
   const food = document.getElementById('rsvp-food').value;
 
-  // Obtener número de Firebase
-  let numero = '—';
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js');
-    const { getDatabase, ref, runTransaction } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js');
+  // Número de invitado (solo para quien confirma que va)
+  let numero = null;
+  if (attend === 'si') {
+    try {
+      const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js');
+      const { getDatabase, ref, runTransaction } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js');
+      const { getAuth, signInAnonymously } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js');
 
-    const fbConfig = {
-      apiKey: "AIzaSyAitvN3B5vGyrBehrViniNSI0qZmuXFjiw",
-      authDomain: "paginaweb18-658f6.firebaseapp.com",
-      databaseURL: "https://paginaweb18-658f6-default-rtdb.firebaseio.com",
-      projectId: "paginaweb18-658f6",
-      storageBucket: "paginaweb18-658f6.firebasestorage.app",
-      messagingSenderId: "348480266849",
-      appId: "1:348480266849:web:301522e8bee4e6ba528020"
-    };
+      const fbConfig = {
+        apiKey: "AIzaSyAitvN3B5vGyrBehrViniNSI0qZmuXFjiw",
+        authDomain: "paginaweb18-658f6.firebaseapp.com",
+        databaseURL: "https://paginaweb18-658f6-default-rtdb.firebaseio.com",
+        projectId: "paginaweb18-658f6",
+        storageBucket: "paginaweb18-658f6.firebasestorage.app",
+        messagingSenderId: "348480266849",
+        appId: "1:348480266849:web:301522e8bee4e6ba528020"
+      };
 
-    const fbApp = getApps().length ? getApps()[0] : initializeApp(fbConfig);
-    const db = getDatabase(fbApp);
+      const fbApp = getApps().length ? getApps()[0] : initializeApp(fbConfig);
+      const fbAuth = getAuth(fbApp);
+      if (!fbAuth.currentUser) await signInAnonymously(fbAuth);   // las reglas piden usuario (anónimo)
+      const db = getDatabase(fbApp);
 
-    const result = await runTransaction(ref(db, 'rsvp_counter'), current => (current || 0) + 1);
-    if (result.committed) numero = result.snapshot.val();
-  } catch (err) {
-    console.warn('No se pudo obtener número de Firebase:', err);
-    // Continúa igual, sin número
+      const result = await runTransaction(ref(db, 'rsvp_counter'), current => (current || 0) + 1);
+      if (result.committed) numero = result.snapshot.val();
+    } catch (err) {
+      console.warn('No se pudo obtener número de Firebase:', err);
+      // Continúa igual: el mail sale con "Pendiente"
+    }
   }
+  const numeroTxt = numero
+    ? `#${numero}`
+    : (attend === 'si' ? 'Pendiente (te lo avisamos)' : 'Se asigna al confirmar');
 
   const params = {
     name,
@@ -205,7 +216,7 @@ async function submitRSVP() {
     disfraz:  costume || 'No especificó',
     comida:   food || 'Ninguna',
     mensaje:  msg || '—',
-    numero:   `#${numero}`,
+    numero:   numeroTxt,
   };
 
   // Mail a vos
@@ -222,7 +233,9 @@ async function submitRSVP() {
   const success = document.getElementById('rsvp-success');
   success.style.display = 'block';
   document.getElementById('success-name').textContent =
-    attend === 'si' ? `¡Te vemos en la fiesta, ${name}! Sos el invitado #${numero} 🎟️` : '';
+    attend === 'si'
+      ? (numero ? `¡Te vemos en la fiesta, ${name}! Sos el invitado #${numero} 🎟️` : `¡Te vemos en la fiesta, ${name}!`)
+      : '';
   launchConfetti();
 }
 
