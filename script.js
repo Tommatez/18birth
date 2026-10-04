@@ -48,7 +48,7 @@ const bingoItems = [
   'Pareja besándose en la pista', 'El buffet se queda sin algo', 'Alguien se saca el disfraz',
   'Selfie grupal espontánea', 'Discurso emotivo', 'Alguien llega tardísimo',
   '★ FREE ★', // posición 12 = centro
-  'La cumpleañera baila sola', 'Flashmob o coreografía',
+  'El cumpleañero baila solo', 'Flashmob o coreografía',
   'Se pierde un accesorio', '[NOMBRE] se ríe a carcajadas', 'Canción de los 2000s',
   'El photobooth con cola', 'Alguien se duerme en un rincón', 'Todo el mundo en la pista',
   'Brindis con discurso', '[NOMBRE] se emociona con un regalo', 'La torta aparece sorpresa',
@@ -140,29 +140,28 @@ drawBg();
 // ─── COUNTDOWN ────────────────────────────────────────────────────
 
 function updateCountdown() {
- /* document.getElementById('cd-temporal').textContent = 'Muy pronto: acá verán la cuenta regresiva'; */
-}
-updateCountdown(); 
-  function updateCountdown() {
+  const daysElement = document.getElementById('cd-days');
+  if (!daysElement) return;
+
   const diff = PARTY_DATE - new Date();
   if (diff <= 0) {
-    document.getElementById('cd-days').textContent = '¡YA!';
+    daysElement.textContent = '¡YA!';
     return;
   }
   const d = Math.floor(diff / 86400000);
   const h = Math.floor((diff % 86400000) / 3600000);
   const m = Math.floor((diff % 3600000) / 60000);
   const s = Math.floor((diff % 60000) / 1000);
-  document.getElementById('cd-days').textContent = String(d).padStart(2, '0');
+  daysElement.textContent = String(d).padStart(2, '0');
   document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
   document.getElementById('cd-mins').textContent = String(m).padStart(2, '0');
   document.getElementById('cd-secs').textContent = String(s).padStart(2, '0');
-} 
+}
 updateCountdown();
-  setInterval(updateCountdown, 1000); 
+setInterval(updateCountdown, 1000);
 
 // ─── RSVP ─────────────────────────────────────────────────────────
-function submitRSVP() {
+async function submitRSVP() {
   const name = document.getElementById('rsvp-name').value.trim();
   const attend = document.getElementById('rsvp-attend').value;
   if (!name || !attend) { showToast('Por favor completá nombre y asistencia 🎭'); return; }
@@ -172,25 +171,59 @@ function submitRSVP() {
   const email = document.getElementById('rsvp-email').value;
   const food = document.getElementById('rsvp-food').value;
 
-  // Simulación de envío (reemplazar con EmailJS, Formspree, etc.)
-emailjs.send('service_c72ygvu', 'template_vjzj65e', {
-    name:     name,
+  // Obtener número de Firebase
+  let numero = '—';
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js');
+    const { getDatabase, ref, runTransaction } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js');
+
+    const fbConfig = {
+      apiKey: "AIzaSyAitvN3B5vGyrBehrViniNSI0qZmuXFjiw",
+      authDomain: "paginaweb18-658f6.firebaseapp.com",
+      databaseURL: "https://paginaweb18-658f6-default-rtdb.firebaseio.com",
+      projectId: "paginaweb18-658f6",
+      storageBucket: "paginaweb18-658f6.firebasestorage.app",
+      messagingSenderId: "348480266849",
+      appId: "1:348480266849:web:301522e8bee4e6ba528020"
+    };
+
+    const fbApp = getApps().length ? getApps()[0] : initializeApp(fbConfig);
+    const db = getDatabase(fbApp);
+
+    const result = await runTransaction(ref(db, 'rsvp_counter'), current => (current || 0) + 1);
+    if (result.committed) numero = result.snapshot.val();
+  } catch (err) {
+    console.warn('No se pudo obtener número de Firebase:', err);
+    // Continúa igual, sin número
+  }
+
+  const params = {
+    name,
     telefono: document.getElementById('rsvp-tel').value || 'No especificado',
     email:    email || 'No especificado',
     asiste:   attend === 'si' ? '✅ Confirma' : attend === 'no' ? '❌ No puede' : '⏳ Tal vez',
     disfraz:  costume || 'No especificó',
     comida:   food || 'Ninguna',
     mensaje:  msg || '—',
-  }).then(() => {
-    document.getElementById('rsvp-form-wrap').style.display = 'none';
-    const success = document.getElementById('rsvp-success');
-    success.style.display = 'block';
-    document.getElementById('success-name').textContent = attend === 'si' ? `¡Te vemos en la fiesta, ${name}!` : '';
-    launchConfetti();
-  }).catch((error) => {
-    showToast('Hubo un error al enviar. Intentá de nuevo.');
-    console.error(error);
-  });
+    numero:   `#${numero}`,
+  };
+
+  // Mail a vos
+  emailjs.send('service_c72ygvu', 'template_vjzj65e', params)
+    .catch(err => console.error('Error mail Tomas:', err));
+
+  // Mail al invitado (solo si dejó email y confirma o tal vez)
+  if (email && attend !== 'no') {
+    emailjs.send('service_c72ygvu', 'template_2am7883', params)
+      .catch(err => console.error('Error mail invitado:', err));
+  }
+
+  document.getElementById('rsvp-form-wrap').style.display = 'none';
+  const success = document.getElementById('rsvp-success');
+  success.style.display = 'block';
+  document.getElementById('success-name').textContent =
+    attend === 'si' ? `¡Te vemos en la fiesta, ${name}! Sos el invitado #${numero} 🎟️` : '';
+  launchConfetti();
 }
 
 // ─── MUSIC ────────────────────────────────────────────────────────
@@ -371,7 +404,7 @@ function showQuizResult() {
 }
 
 function restartQuiz() { initQuiz(); }
-initQuiz();
+if (document.getElementById('quiz-content')) initQuiz(); // solo si la sección existe en el HTML
 
 // ─── BINGO ────────────────────────────────────────────────────────
 let bingoState = Array(25).fill(false);
@@ -418,7 +451,7 @@ function checkBingo() {
   }
 }
 
-shuffleBingo();
+if (document.getElementById('bingo-grid')) shuffleBingo(); // solo si la sección existe en el HTML
 
 // ─── PHOTOS ───────────────────────────────────────────────────────
 function handlePhotoUpload(event) {
@@ -495,3 +528,112 @@ function closeTeaser(e) {
     window.scrollTo({ top:0, behavior: 'smooth' });
   }, 800); // espera a que termine el fade
 }
+
+// ─── CARRUSEL INFINITO (Juegos de la noche) ──────────────────────
+(function () {
+  const track = document.getElementById('juegos-track');
+  const inner = document.getElementById('juegos-inner');
+  if (!track || !inner) return;
+
+  const originals = Array.from(inner.children);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SPEED = 28;            // px por segundo
+  const EXTRA_SETS = 7;        // copias de más para tener margen al deslizar fuerte
+  let setW = 0, pos = 0, last = 0, builtWidth = 0;
+  let hover = false, touching = false, dragging = false, visible = true;
+  let resumeAt = 0, moved = 0, startX = 0, startLeft = 0, idleTimer = null, resizeTimer = null;
+
+  function build() {
+    inner.querySelectorAll('[data-clone]').forEach(n => n.remove());
+    const first = originals[0], lastC = originals[originals.length - 1];
+    const mr = parseFloat(getComputedStyle(lastC).marginRight) || 0;
+    setW = lastC.offsetLeft + lastC.offsetWidth + mr - first.offsetLeft;
+    if (!setW) return;
+    const sets = Math.ceil(track.clientWidth / setW) + EXTRA_SETS;
+    for (let i = 1; i < sets; i++) originals.forEach(c => {
+      const k = c.cloneNode(true);
+      k.setAttribute('data-clone', ''); k.setAttribute('aria-hidden', 'true'); k.setAttribute('tabindex', '-1');
+      inner.appendChild(k);
+    });
+    builtWidth = window.innerWidth;
+    pos = setW * 3; track.scrollLeft = pos;
+  }
+
+  // Lleva la posición a la franja central. Como las copias son idénticas, no se nota.
+  // Solo se llama cuando el carrusel está quieto (así no corta el impulso del dedo en el celu).
+  function normalize() {
+    if (!setW) return;
+    const rel = (((track.scrollLeft - setW * 3) % setW) + setW) % setW;
+    const target = setW * 3 + rel;
+    if (Math.abs(target - track.scrollLeft) > 1) track.scrollLeft = target;
+    pos = track.scrollLeft;
+  }
+
+  function tick(t) {
+    const dt = Math.min(0.05, (t - last) / 1000 || 0); last = t;
+    const auto = setW && visible && !reduce && !hover && !touching && !dragging && t > resumeAt;
+    if (auto) {
+      pos += SPEED * dt;
+      if (pos >= setW * 4) pos -= setW;
+      track.scrollLeft = pos;
+    } else if (setW) {
+      pos = track.scrollLeft;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const pause = ms => { resumeAt = performance.now() + ms; };
+
+  // mouse (solo mouse: en el celu "hover" se queda pegado y frenaba el carrusel)
+  track.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') hover = true; });
+  track.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { hover = false; pause(600); } });
+  track.addEventListener('focusin', () => { hover = true; });
+  track.addEventListener('focusout', () => { hover = false; pause(600); });
+
+  // dedo
+  track.addEventListener('touchstart', () => { touching = true; }, { passive: true });
+  const endTouch = () => { touching = false; pause(2500); };
+  track.addEventListener('touchend', endTouch, { passive: true });
+  track.addEventListener('touchcancel', endTouch, { passive: true });
+
+  // trackpad / rueda horizontal
+  track.addEventListener('wheel', () => pause(2000), { passive: true });
+
+  // cuando se queda quieto, reacomodamos
+  track.addEventListener('scroll', () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => { if (!touching && !dragging) normalize(); }, 160);
+  }, { passive: true });
+
+  // arrastrar con el mouse
+  track.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse') return;
+    dragging = true; moved = 0; startX = e.clientX; startLeft = track.scrollLeft;
+    track.classList.add('dragging');
+  });
+  window.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const dx = e.clientX - startX; moved = Math.max(moved, Math.abs(dx));
+    track.scrollLeft = startLeft - dx;
+  });
+  window.addEventListener('pointerup', () => {
+    if (!dragging) return;
+    dragging = false; track.classList.remove('dragging'); pause(1500);
+  });
+  track.addEventListener('click', e => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } moved = 0; }, true);
+
+  // solo se anima cuando se ve en pantalla (ahorra batería y memoria)
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(track);
+  }
+
+  // en el celu la barra del navegador cambia el alto al scrollear: solo reconstruimos si cambia el ANCHO
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { if (window.innerWidth !== builtWidth) build(); }, 200);
+  });
+
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(build);
+  build();
+  requestAnimationFrame(tick);
+})();

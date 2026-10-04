@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#04060F">
+  <title>🎉 Bingo — 18 de Tomas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=New+Rocker&family=Metamorphous&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+/* ===== 🔒 CANDADO (borrá o comentá este bloque CSS junto con el bloque HTML del candado) ===== */
+.upload-lock {
+  position: absolute;
+  inset: 0;        /* ← sacás el "0 2rem", que dejaba huecos */
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(4,6,15,0.88);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px dashed rgba(196,168,130,0.35);
+  text-align: center;
+  padding: 1.5rem;
+  cursor: not-allowed;
+}
+.upload-lock-icon { font-size: 2.5rem; }
+.upload-lock-title { font-family: 'New Rocker', system-ui; font-size: 1.1rem; color: var(--star); letter-spacing: 0.05em; }
+.upload-lock-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+/* ===== FIN CANDADO CSS ===== */
+@media (max-width: 600px) {
+  .bingo-cell {
+    font-size: 0.45rem;
+    padding: 0.2rem;
+  }
+  .bingo-cell.free { font-size: 0.7rem; }
+  .bingo-cell.marked::after { font-size: 1.2rem; }
+  .bingo-container { max-width: 100%; }
+}
+</style>
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <nav>
+    <a class="nav-logo" href="index.html#juegos-section">← Volver a la fiesta</a>
+  </nav>
+
+  <section id="bingo-section" class="fade-in">
+    <span class="section-tag">Juego colectivo</span>
+    <h1 class="section-title">Bingo de la Fiesta</h1>
+    <div class="section-line"></div>
+    <p style="text-align:center;color:var(--text-muted);font-size:0.9rem;max-width:500px;margin:0 auto 2rem">
+      Marcá los casilleros cuando sucedan esas cosas en la fiesta. ¡El primero en hacer línea gana!
+    </p>
+
+      
+
+
+
+    <div class="bingo-container">
+      <div class="bingo-header">
+        <div class="bingo-name" aria-label="Bingo">
+          <span>B</span><span>I</span><span>N</span><span>G</span><span>O</span>
+        </div>
+        <button class="btn-primary" type="button" onclick="shuffleBingo()" style="padding:0.5rem 1.5rem;font-size:0.75rem">
+          🔀 Mezclar
+        </button>
+      </div>
+
+<!-- ===== 🔒 CANDADO: borrá o comentá desde acá hasta "FIN CANDADO" para habilitar la subida ===== 
+        <div class="upload-lock" id="upload-lock">
+            <div class="upload-lock-icon">🔒</div>
+            <div class="upload-lock-title">Subida bloqueada</div>
+            <div class="upload-lock-text">Se habilita el día de la fiesta.<br>Mientras tanto podés ver la galería.</div>
+        </div>  
+        <!-- ===== FIN CANDADO ===== --> -->
+
+      <div class="bingo-grid" id="bingo-grid" aria-label="Tablero de bingo"> </div>
+         
+      <p class="bingo-announce" id="bingo-announce" role="status" aria-live="polite">🎉 ¡BINGO!</p>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

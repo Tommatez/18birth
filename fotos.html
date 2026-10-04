@@ -147,7 +147,15 @@ footer { position: relative; z-index: 1; text-align: center; padding: 2rem; bord
   .upload-name-wrap { flex-direction: column; }
   nav { padding: 0.75rem 1rem; }
 }
-
+@media (max-width: 600px) {
+  .page-hero { padding: 5rem 1.5rem 2rem; }
+  .upload-zone { padding: 1.25rem 1rem; }
+  .upload-icon { font-size: 1.6rem; margin-bottom: 0.4rem; }
+  .upload-text { font-size: 0.8rem; }
+  .upload-wrap { margin-bottom: 2rem; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+  .ranking-wrap { padding: 0 1rem; }
+}
 .camera-btn {
   display: block; width: 100%; margin-top: 0.75rem; padding: 0.9rem 1rem;
   background: linear-gradient(135deg, var(--colour), var(--colour-bright)); border: none; color: #fff;
@@ -192,7 +200,7 @@ footer { position: relative; z-index: 1; text-align: center; padding: 2rem; bord
     <div class="upload-lock-title">Subida bloqueada</div>
     <div class="upload-lock-text">Se habilita el día de la fiesta.<br>Mientras tanto podés ver la galería.</div>
   </div>
-   ===== FIN CANDADO ===== --> 
+  <!-- ===== FIN CANDADO ===== --> --> 
   <div class="upload-name-wrap">
     <input type="text" class="upload-name-input" id="photographer-name" placeholder="Tu nombre (aparece en la foto)">
   </div>
@@ -201,7 +209,7 @@ footer { position: relative; z-index: 1; text-align: center; padding: 2rem; bord
     <div class="upload-icon">📷</div>
     <p class="upload-text">
       <strong>Hacé click o arrastrá</strong> tus fotos acá<br>
-      <span style="font-size:0.8rem">JPG, PNG, WebP · Máx 10MB por foto</span>
+      <span style="font-size:0.8rem">JPG, PNG, WebP · Se achican solas al subir</span>
     </p>
   </label>
   <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
@@ -264,7 +272,10 @@ const FIREBASE_CONFIG = {
 
 const CLOUDINARY_CLOUD = 'dyjge6xkq';
 const CLOUDINARY_PRESET = 'pagina18';
-const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_MB = 10;   // límite de Cloudinary (plan gratis) para lo que se sube
+const MAX_RAW_MB = 60;         // tamaño máximo de la foto original (después se achica)
+const MAX_SIDE = 1600;         // lado más largo, en píxeles, de lo que se sube
+const JPEG_QUALITY = 0.82;
 
 // ── ESTADO ──
 window.myVotes = JSON.parse(localStorage.getItem('myVotes') || '{}');
@@ -359,41 +370,80 @@ async function handleFiles(files) {
 
   const valid = files.filter(f => {
     if (!f.type.startsWith('image/')) { showToast(`${f.name} no es una imagen`); return false; }
-    if (f.size > MAX_FILE_SIZE_MB * 1024 * 1024) { showToast(`${f.name} supera los ${MAX_FILE_SIZE_MB}MB`); return false; }
+    if (f.size > MAX_RAW_MB * 1024 * 1024) { showToast(`${f.name} es demasiado pesada`); return false; }
     return true;
   });
   if (!valid.length) { photoInput.value = ''; return; }
 
   const progress = document.getElementById('upload-progress');
   progress.style.display = 'block';
+  await authReady;
 
-  try {
-    await authReady;
-    for (let i = 0; i < valid.length; i++) {
-      setProgress((i / valid.length) * 100);
+  let ok = 0, fail = 0, lastErr = '';
+  for (let i = 0; i < valid.length; i++) {
+    setProgress((i / valid.length) * 100);
+    try {
+      setStatus(`Preparando ${i+1} de ${valid.length}...`);
+      const small = await shrinkImage(valid[i]);
+      if (small.size > MAX_FILE_SIZE_MB * 1024 * 1024) throw new Error('la foto es muy pesada');
       setStatus(`Subiendo ${i+1} de ${valid.length}...`);
-      await uploadOne(valid[i], name);
+      await uploadOne(small, name);
+      ok++;
+    } catch (err) {
+      console.error(err);
+      fail++; lastErr = (err && err.message) ? err.message : String(err);
     }
-  } catch (err) {
-    console.error(err);
-    showToast('Error al subir. Revisá tu conexión e intentá de nuevo');
-    progress.style.display = 'none';
-    setStatus('');
-    setProgress(0);
-    photoInput.value = '';
-    return;
   }
 
   setProgress(100);
-  setStatus('✓ Listo');
+  setStatus(fail ? '' : '✓ Listo');
   setTimeout(() => {
     progress.style.display = 'none';
     setStatus('');
     setProgress(0);
   }, 2000);
 
-  showToast(`${valid.length} foto${valid.length>1?'s':''} subida${valid.length>1?'s':''} 🎉`);
+  if (ok && !fail) showToast(`${ok} foto${ok>1?'s':''} subida${ok>1?'s':''} 🎉`);
+  else if (ok && fail) showToast(`Se subieron ${ok}, pero ${fail} fallaron (${lastErr})`);
+  else showToast(`No se pudo subir: ${lastErr}`);
   photoInput.value = '';
+}
+
+// Achica la foto en el celular ANTES de subirla: menos memoria, menos datos, sube más rápido.
+async function shrinkImage(file) {
+  const maxBytes = MAX_FILE_SIZE_MB * 1024 * 1024;
+  if (file.size < 400 * 1024 && file.type === 'image/jpeg') return file;
+  const url = URL.createObjectURL(file);
+  try {
+    const img = new Image();
+    img.decoding = 'async';
+    await new Promise((res, rej) => {
+      img.onload = res;
+      img.onerror = () => rej(new Error('no se pudo leer la imagen'));
+      img.src = url;
+    });
+    const w0 = img.naturalWidth, h0 = img.naturalHeight;
+    const scale = Math.min(1, MAX_SIDE / Math.max(w0, h0));
+    if (scale === 1 && file.type === 'image/jpeg' && file.size <= 1.5 * 1024 * 1024) return file;
+
+    const w = Math.max(1, Math.round(w0 * scale)), h = Math.max(1, Math.round(h0 * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const c2d = canvas.getContext('2d');
+    c2d.fillStyle = '#fff'; c2d.fillRect(0, 0, w, h);   // por si es un PNG con transparencia
+    c2d.drawImage(img, 0, 0, w, h);
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', JPEG_QUALITY));
+    canvas.width = canvas.height = 0;                    // liberar memoria
+    img.src = '';
+    if (!blob) return file;
+    if (blob.size >= file.size && file.size <= maxBytes) return file;
+    return new File([blob], (file.name.replace(/\.[^.]+$/, '') || 'foto') + '.jpg', { type: 'image/jpeg' });
+  } catch (err) {
+    if (file.size <= maxBytes) return file;              // no se pudo achicar, pero entra: se sube igual
+    throw err;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 async function uploadOne(file, author) {
@@ -406,7 +456,7 @@ async function uploadOne(file, author) {
     method: 'POST', body: fd
   });
   const data = await res.json();
-  if (!data.secure_url) throw new Error('Cloudinary error: ' + JSON.stringify(data));
+  if (!data.secure_url) throw new Error((data.error && data.error.message) || 'error de Cloudinary');
 
   await push(ref(db, 'fotos'), {
     url: data.secure_url,
@@ -461,7 +511,7 @@ function renderGallery() {
     return `
       <div class="photo-card ${isTop ? 'top-voted' : ''}">
         ${isTop ? '<span class="top-badge">★ Top</span>' : ''}
-        <img class="photo-card-img" data-id="${id}" src="${p.thumb || p.url}" alt="" loading="lazy">
+        <img class="photo-card-img" data-id="${id}" src="${p.thumb || p.url}" alt="" loading="lazy" decoding="async">
         <div class="photo-card-body">
           <div class="photo-card-meta">
             <div class="photo-card-author">📷 ${escHtml(p.author)}</div>
@@ -492,7 +542,7 @@ function renderRanking() {
   list.innerHTML = entries.map(([id,p],i) => `
     <div class="ranking-item" data-id="${id}">
       <span class="ranking-pos">${medals[i]}</span>
-      <img class="ranking-thumb" src="${p.thumb||p.url}" alt="">
+      <img class="ranking-thumb" src="${p.thumb||p.url}" alt="" decoding="async">
       <div class="ranking-info">
         <div class="ranking-author">${escHtml(p.author)}</div>
         <div class="ranking-votes">${p.votes||0} voto${(p.votes||0)!==1?'s':''}</div>
@@ -536,8 +586,9 @@ window.setSort = function(sort, btn) {
 };
 
 // ── LIGHTBOX ──
+const bigUrl = u => String(u).replace('/upload/', '/upload/w_1600,q_auto,f_auto/');
 function openLightbox(url, author, votes) {
-  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox-img').src = bigUrl(url);
   document.getElementById('lightbox-meta').innerHTML =
     `<strong>${author}</strong> · ${votes} voto${votes!==1?'s':''}`;
   document.getElementById('lightbox').classList.add('open');

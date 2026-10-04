@@ -39,10 +39,7 @@
   <ul class="nav-links">
     <li><a href="#info-section">Info</a></li>
     <li><a href="#rsvp-section">Confirmar</a></li>
-<!--     <li><a href="#music-section">Música</a></li>
-    <li><a href="#quiz-section">Quiz</a></li>-->
-    <li><a href="#ruleta-section">Ruleta</a></li>
-    <li><a href="#fotos-section">Fotos</a></li> 
+    <li><a href="#juegos-section">Juegos</a></li>
   </ul>
 </nav>
 
@@ -51,9 +48,9 @@
 <div id="hero">
   <div class="hero-18" aria-hidden="true">18</div>
   <div class="hero-mask" aria-label="Máscara de fiesta"><img src="skull.png" alt="Máscara de fiesta"></div>
-  <p class="hero-subtitle">Estas invitado personalmente a este evento por</p>
-  <h1 class="hero-name">TOMAS</h1>
-  <p class="hero-subtitle" style="font-size:0.75rem;letter-spacing:0.5em;margin-top:0.5rem">invitado a su fiesta de Disfraces</p>
+  <p class="hero-subtitle">Estas invitado personalmente por Tomas a su fiesta de Disfraces</p>
+  <h1 class="hero-name">Cumpleaños numero 18</h1>
+  <p class="hero-subtitle" style="font-size:0.75rem;letter-spacing:0.5em;margin-top:0.5rem">Tomas - 18 años</p>
 
   <div class="hero-divider"></div>
 
@@ -76,7 +73,6 @@
   <div class="hero-divider"></div>
 
   <div class="countdown-row" id="countdown-hero">
-    <div class="countdown-block"><span class="countdown-num" id="cd-temporal">--</span><span class="countdown-label">Muy pronto</span></div>
     <div class="countdown-block"><span class="countdown-num" id="cd-days">--</span><span class="countdown-label">Días</span></div>
     <div class="countdown-sep" style="font-size:2rem;opacity:0.3;align-self:center">:</div>
     <div class="countdown-block"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-label">Horas</span></div>
@@ -99,7 +95,7 @@
       <div class="info-card-icon">📍</div>
       <div class="info-card-title">Lugar</div>
       <div class="info-card-highlight">Quinta Luna <!-- [Nombre del Salón] --></div>
-      <div class="info-card-text"> Rembrandt 5885, Francisco Alvarez<!-- [Dirección completa] --><br> <a href="https://maps.app.goo.gl/RoXERcvztbZu464MA" target="_blank">Ver en Google Maps</a> <!-- [Descripción de la fachada] --></div>
+      <div class="info-card-text"> Rembrandt 5885, Francisco Alvarez<!-- [Dirección completa] --><br> <a class="btn-secondary" href="https://maps.app.goo.gl/RoXERcvztbZu464MA" target="_blank">Ver en Google Maps</a> <!-- [Descripción de la fachada] --></div>
     </div>
     <div class="info-card">
       <div class="info-card-icon">🕘</div>
@@ -112,12 +108,6 @@
       <div class="info-card-title">Código de vestimenta</div>
       <div class="info-card-highlight">Disfraz obligatorio</div>
       <div class="info-card-text">Si no venis disfrazado no entras. Sea lo que sea — ¡Media pila! Va a haber premio al mejor disfraz.</div>
-    </div>
-    <div class="info-card">
-      <div class="info-card-icon">🏊</div>
-      <div class="info-card-title">Piscina</div>
-      <div class="info-card-highlight">Si te quedas a dormir, no olvides traer cambio para la piscina</div>
-      <div class="info-card-text">Va a haber una piscina disponible para que puedan disfrutar del agua durante la fiesta. Es pleno verano y vamos a tener mucho calor. Mejor si pueden prevenir con un cambio</div>
     </div>
     <div class="info-card">
       <div class="info-card-icon">🍾</div>
@@ -155,8 +145,11 @@
       <li>Si venís en auto, coordiná con alguien — Sale mas barato y ahorra un mal viaje</li>
       <li>Cargá el celular antes de venir — vas a querer sacar fotos</li>
       <li>Si no conocés a mucha gente, no importa — esa es la magia de los disfraces</li>
-      <li>Hay piscina — no olvides de traer ropa extra</li>
-      <li>Si quieren contribuir de alguna forma extra, toda donacion siempre es bienvenida: <h3><u>Tomas.tomate.qso</u></h3></li>
+      <li>Si quieren dejarme un regalo, aunque no sea necesario, toda donacion siempre es bienvenida: 
+        <a href="https://mpago.la/2c1zBUy" target="_blank" 
+          style="color:var(--star);text-decoration:none;border-bottom:1px solid rgba(196,168,130,0.3);">
+        Tomas.tomate.qso
+        </a></li>
     </ul>
   </div>
 </section>
@@ -264,7 +257,7 @@
   </div>
 </section>
 
- ── QUIZ ── 
+  ── QUIZ ── 
 <section id="quiz-section" class="fade-in">
   <span class="section-tag">¿Cuánto lo conocés?</span>
   <h2 class="section-title">Quiz del Cumpleañero</h2>
@@ -285,107 +278,107 @@
     </div>
   </div>
 </section>
-
-── BINGO ── 
-<section id="bingo-section" class="fade-in">
-  <span class="section-tag">Juego colectivo</span>
-  <h2 class="section-title">Bingo de la Fiesta</h2>
-  <div class="section-line"></div>
-  <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;max-width:500px;margin:0 auto 2rem">Marcá los casilleros cuando sucedan esas cosas en la fiesta. ¡El primero en hacer línea gana!</p>
-
-  <div class="bingo-container">
-    <div class="bingo-header">
-      <div class="bingo-name">
-        <span>B</span><span>I</span><span>N</span><span>G</span><span>O</span>
-      </div>
-      <button class="btn-primary" onclick="shuffleBingo()" style="padding:0.5rem 1.5rem;font-size:0.75rem">🔀 Mezclar</button>
-    </div>
-    <div class="bingo-grid" id="bingo-grid"></div>
-    <p class="bingo-announce" id="bingo-announce">🎉 ¡BINGO!</p>
-  </div>
-</section>
 -->
+<!-- ── JUEGOS (fotos, ruleta, karaoke) ── -->
 
-<!-- ── FOTOS ── -->
+<section id="juegos-section" class="fade-in">
+  <span id="fotos-section"></span><span id="ruleta-section"></span>
+  <span class="section-tag">Durante la fiesta</span>
+  <h2 class="section-title">Juegos de la noche</h2>
+  <div class="section-line"></div>
+  <p class="sectionjuegos-text" >Deslizá para ver todo →</p>
 
+<div class="juegos-track" id="juegos-track">
+    <div class="juegos-inner" id="juegos-inner">
+
+      <a href="fotos.html" class="juego-card" draggable="false">
+        <span class="juego-emoji">📷</span>
+        <span class="juego-title">Galería de la fiesta</span>
+        <span class="juego-text">Mirá las fotos de la noche y votá tus favoritas.</span>
+        <span class="juego-btn">Ver galería →</span>
+        <!-- 🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso -->
+        <span class="juego-lock">🔒 La subida de fotos se habilita el día de la fiesta</span>
+      </a>
+
+      <a href="ruleta.html" class="juego-card" draggable="false">
+        <span class="juego-emoji">🎡</span>
+        <span class="juego-title">Ruleta de desafíos</span>
+        <span class="juego-text">Participá en los retos de la noche y ganá premios.</span>
+        <span class="juego-btn">Jugar →</span>
+        <!-- 🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso -->
+        <span class="juego-lock">🔒 La ruleta se habilita el día de la fiesta</span>
+      </a>
+
+      <a href="karaoke.html" class="juego-card" draggable="false">
+        <span class="juego-emoji">🎤</span>
+        <span class="juego-title">Karaoke</span>
+        <span class="juego-text">Anotá tu canción y mirala en la pantalla en vivo.</span>
+        <span class="juego-btn">Anotarme →</span>
+        <!-- 🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso -->
+        <span class="juego-lock">🔒 El karaoke se habilita el día de la fiesta</span>
+      </a>
+
+      <a href="bingo.html" class="juego-card" draggable="false">
+        <span class="juego-emoji">🎉</span>
+        <span class="juego-title">Bingo</span>
+        <span class="juego-text">Participá en el bingo de la fiesta y competi por ser el mas atento.</span>
+        <span class="juego-btn">Completar →</span>
+        <!-- 🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso -->
+        <span class="juego-lock">🔒 El bingo se habilita el día de la fiesta</span>
+      </a>
+      
+
+    </div>
+  </div>
+  </section>
+<!--
 <section id="fotos-section" class="fade-in">
   <span class="section-tag">Galería</span>
   <h2 class="section-title">Fotos de la noche</h2>
   <div class="section-line"></div>
-  <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;max-width:500px;margin:0 auto 2rem">Subí tus fotos de la fiesta y completemos la galeria.</p>
- 
-  <style>
-    .foto-card {
-      display: block; max-width: 520px; margin: 0 auto; padding: 2.5rem 2rem;
-      text-align: center; text-decoration: none; background: var(--void2);
-      border: 1px dashed rgba(196,168,130,0.3); border-radius: 2px; transition: all 0.3s;
-    }
-    .foto-card:hover { border-color: var(--star); transform: translateY(-2px); }
-    .foto-card-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
-    .foto-card-title { font-family: 'New Rocker', system-ui; font-size: 1.1rem; color: var(--star); letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem; }
-    .foto-card-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; display: block; margin-bottom: 1.25rem; }
-    .foto-card-btn { display: inline-block; padding: 0.6rem 1.6rem; border: 1px solid var(--star); color: var(--star); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; }
-    .foto-card:hover .foto-card-btn { background: rgba(196,168,130,0.08); }
-    /* 🔒 CANDADO: borrá este bloque CSS y el span "foto-lock" para habilitar la subida */
-    .foto-lock { display: block; margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.05em; }
-  </style>
- 
+  <p class="sectionfoto-text">Subí tus fotos de la fiesta y completemos la galeria.</p>
+
+  
   <a href="fotos.html" class="foto-card">
     <span class="foto-card-emoji">📷</span>
     <span class="foto-card-title">Galería de la fiesta</span>
     <span class="foto-card-text">Mirá las fotos de la noche y votá tus favoritas.</span>
     <span class="foto-card-btn">Ver galería →</span>
-    <!-- 🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso -->
+    🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso 
     <span class="foto-lock">🔒 La subida de fotos se habilita el día de la fiesta</span>
   </a>
 </section>
 
-<!-- ── RULETA ── -->
+  ── RULETA ── 
 
 <section id="ruleta-section" class="fade-in">
   <span class="section-tag">Ruleta</span>
   <h2 class="section-title">Para los retos de la noche</h2>
   <div class="section-line"></div>
-  <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;max-width:500px;margin:0 auto 2rem">Participá en los retos de la noche y ganá premios.</p>
- 
-  <style>
-    .foto-card {
-      display: block; max-width: 520px; margin: 0 auto; padding: 2.5rem 2rem;
-      text-align: center; text-decoration: none; background: var(--void2);
-      border: 1px dashed rgba(196,168,130,0.3); border-radius: 2px; transition: all 0.3s;
-    }
-    .foto-card:hover { border-color: var(--star); transform: translateY(-2px); }
-    .foto-card-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
-    .foto-card-title { font-family: 'New Rocker', system-ui; font-size: 1.1rem; color: var(--star); letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem; }
-    .foto-card-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; display: block; margin-bottom: 1.25rem; }
-    .foto-card-btn { display: inline-block; padding: 0.6rem 1.6rem; border: 1px solid var(--star); color: var(--star); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; }
-    .foto-card:hover .foto-card-btn { background: rgba(196,168,130,0.08); }
-    /* 🔒 CANDADO: borrá este bloque CSS y el span "foto-lock" para habilitar la subida */
-    .foto-lock { display: block; margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.05em; }
-  </style>
- 
+  <p class="sectionfoto-text">Participá en los retos de la noche y ganá premios.</p>
+
   <a href="ruleta.html" class="foto-card">
     <span class="foto-card-emoji">🎡</span>
     <span class="foto-card-title">Ruleta de la fiesta</span>
     <span class="foto-card-text">Participá en los retos de la noche y ganá premios.</span>
     <span class="foto-card-btn">Jugar →</span>
-    <!-- 🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso -->
+    🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso 
     <span class="foto-lock">🔒 La ruleta se habilita el día de la fiesta</span>
   </a>
 </section>
 
-<!-- ── CONSTRUCCION ── -->
+── CONSTRUCCION ── -->
 
 <section class="build">
   <div class="build-div">
     <p class="build-title">🔒</p>
     <p class="build-p1">Sección en construcción</p>
     <p class="build-p2">
-      El quiz, la música para el DJ y la galería de fotos entre otras opciones<br>
+      Los diferentes juegos estan siendo atentidos a detalle<br>
       se van a desbloquear el día de la fiesta.
     </p>
   </div>
-</section>
+</section> 
 <!-- ── FOOTER ── -->
 <footer>
   <div class="footer-mask">🎭</div>
