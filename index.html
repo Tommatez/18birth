@@ -119,7 +119,7 @@
       <div class="info-card-icon">📸</div>
       <div class="info-card-title">Fotógrafo</div>
       <div class="info-card-highlight">Usa tu celular</div>
-      <div class="info-card-text">Queremos que cada uno de ustedes sea fotografo esta noche, suban las fotos aca y el dia siguiente apareceran todas abajo. Quien sabe, la mejor foto puede ganar un premio.</div>
+      <div class="info-card-text">Queremos que cada uno de ustedes sea fotografo esta noche, suban las fotos aca y el dia siguiente apareceran todas abajo. La idea es hacer el mejor álbum de la noche.</div>
     </div>
   </div>
   <div class="info-advertencia">
@@ -146,10 +146,9 @@
       <li>Cargá el celular antes de venir — vas a querer sacar fotos</li>
       <li>Si no conocés a mucha gente, no importa — esa es la magia de los disfraces</li>
       <li>Si quieren dejarme un regalo, aunque no sea necesario, toda donacion siempre es bienvenida: 
-        <a href="https://mpago.la/2c1zBUy" target="_blank" 
-          style="color:var(--star);text-decoration:none;border-bottom:1px solid rgba(196,168,130,0.3);">
-        Tomas.tomate.qso
-        </a></li>
+        <a href="https://mpago.la/2c1zBUy" target="_blank" class="alias-btn">
+          💳 Tomas.tomate.qso
+        </a> </li>
     </ul>
   </div>
 </section>
@@ -303,7 +302,7 @@
       <a href="ruleta.html" class="juego-card" draggable="false">
         <span class="juego-emoji">🎡</span>
         <span class="juego-title">Ruleta de desafíos</span>
-        <span class="juego-text">Participá en los retos de la noche y ganá premios.</span>
+        <span class="juego-text">Participá en los retos de la noche y disfruta de los retos.</span>
         <span class="juego-btn">Jugar →</span>
         <!-- 🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso -->
         <span class="juego-lock">🔒 La ruleta se habilita el día de la fiesta</span>
@@ -318,14 +317,20 @@
         <span class="juego-lock">🔒 El karaoke se habilita el día de la fiesta</span>
       </a>
 
-      <a href="bingo.html" class="juego-card" draggable="false">
-        <span class="juego-emoji">🎉</span>
-        <span class="juego-title">Bingo</span>
-        <span class="juego-text">Participá en el bingo de la fiesta y competi por ser el mas atento.</span>
-        <span class="juego-btn">Completar →</span>
-        <!-- 🔒 CANDADO: borrá o comentá la línea de abajo para quitar el aviso -->
-        <span class="juego-lock">🔒 El bingo se habilita el día de la fiesta</span>
-      </a>
+      <div class="juego-wrap locked">
+        <!-- 🔒 CANDADO: para habilitar el muro, borrá la palabra "locked" de la línea de arriba (o borrá este bloque "juego-overlay") -->
+        <div class="juego-overlay">
+          <div class="juego-overlay-icon">🔒</div>
+          <div class="juego-overlay-title">Muro bloqueado</div>
+          <div class="juego-overlay-text">Se habilita dos dias antes de la fiesta</div>
+        </div>
+        <a href="confesiones.html" class="juego-card" draggable="false">
+          <span class="juego-emoji">🤫</span>
+          <span class="juego-title">Muro de confesiones</span>
+          <span class="juego-text">Escribí un secreto anónimo y mirá cómo aparece en la pantalla.</span>
+          <span class="juego-btn">Confesar →</span>
+        </a>
+      </div>
       
 
     </div>

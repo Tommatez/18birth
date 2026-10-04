@@ -518,15 +518,26 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
+// Al cargar la página, chequeá si ya vio el teaser
+window.addEventListener('DOMContentLoaded', () => {
+  const yaVio = localStorage.getItem('teaser_visto');
+  if (yaVio) {
+    const overlay = document.getElementById('teaser-overlay');
+    if (overlay) overlay.remove();
+    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+  }
+});
+
 function closeTeaser(e) {
   e.preventDefault();
+  localStorage.setItem('teaser_visto', '1');
   const overlay = document.getElementById('teaser-overlay');
-  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity 1s ease';
   document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
   setTimeout(() => {
     overlay.remove();
-    window.scrollTo({ top:0, behavior: 'smooth' });
-  }, 800); // espera a que termine el fade
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 800);
 }
 
 // ─── CARRUSEL INFINITO (Juegos de la noche) ──────────────────────

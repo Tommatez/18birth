@@ -194,13 +194,13 @@ footer { position: relative; z-index: 1; text-align: center; padding: 2rem; bord
 </div>
 
 <div class="upload-wrap">
-  <!-- ===== 🔒 CANDADO: borrá o comentá desde acá hasta "FIN CANDADO" para habilitar la subida ===== 
+  <!-- ===== 🔒 CANDADO: borrá o comentá desde acá hasta "FIN CANDADO" para habilitar la subida ===== --> 
   <div class="upload-lock" id="upload-lock">
     <div class="upload-lock-icon">🔒</div>
     <div class="upload-lock-title">Subida bloqueada</div>
     <div class="upload-lock-text">Se habilita el día de la fiesta.<br>Mientras tanto podés ver la galería.</div>
   </div>
-  <!-- ===== FIN CANDADO ===== --> --> 
+  <!-- ===== FIN CANDADO ===== --> 
   <div class="upload-name-wrap">
     <input type="text" class="upload-name-input" id="photographer-name" placeholder="Tu nombre (aparece en la foto)">
   </div>
@@ -413,37 +413,51 @@ async function handleFiles(files) {
 async function shrinkImage(file) {
   const maxBytes = MAX_FILE_SIZE_MB * 1024 * 1024;
   if (file.size < 400 * 1024 && file.type === 'image/jpeg') return file;
+
   const url = URL.createObjectURL(file);
-  try {
+  return new Promise((resolve, reject) => {
     const img = new Image();
     img.decoding = 'async';
-    await new Promise((res, rej) => {
-      img.onload = res;
-      img.onerror = () => rej(new Error('no se pudo leer la imagen'));
-      img.src = url;
-    });
-    const w0 = img.naturalWidth, h0 = img.naturalHeight;
-    const scale = Math.min(1, MAX_SIDE / Math.max(w0, h0));
-    if (scale === 1 && file.type === 'image/jpeg' && file.size <= 1.5 * 1024 * 1024) return file;
-
-    const w = Math.max(1, Math.round(w0 * scale)), h = Math.max(1, Math.round(h0 * scale));
-    const canvas = document.createElement('canvas');
-    canvas.width = w; canvas.height = h;
-    const c2d = canvas.getContext('2d');
-    c2d.fillStyle = '#fff'; c2d.fillRect(0, 0, w, h);   // por si es un PNG con transparencia
-    c2d.drawImage(img, 0, 0, w, h);
-    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', JPEG_QUALITY));
-    canvas.width = canvas.height = 0;                    // liberar memoria
-    img.src = '';
-    if (!blob) return file;
-    if (blob.size >= file.size && file.size <= maxBytes) return file;
-    return new File([blob], (file.name.replace(/\.[^.]+$/, '') || 'foto') + '.jpg', { type: 'image/jpeg' });
-  } catch (err) {
-    if (file.size <= maxBytes) return file;              // no se pudo achicar, pero entra: se sube igual
-    throw err;
-  } finally {
-    URL.revokeObjectURL(url);
-  }
+    img.onload = () => {
+      // pequeño timeout para que Safari termine de decodificar antes de dibujar
+      setTimeout(async () => {
+        try {
+          const w0 = img.naturalWidth, h0 = img.naturalHeight;
+          const scale = Math.min(1, MAX_SIDE / Math.max(w0, h0));
+          if (scale === 1 && file.type === 'image/jpeg' && file.size <= 1.5 * 1024 * 1024) {
+            URL.revokeObjectURL(url);
+            return resolve(file);
+          }
+          const w = Math.max(1, Math.round(w0 * scale));
+          const h = Math.max(1, Math.round(h0 * scale));
+          const cv = document.createElement('canvas');
+          cv.width = w; cv.height = h;
+          const c2d = cv.getContext('2d', { willReadFrequently: false });
+          c2d.fillStyle = '#fff';
+          c2d.fillRect(0, 0, w, h);
+          c2d.drawImage(img, 0, 0, w, h);
+          img.src = '';  // liberar referencia antes de toBlob
+          cv.toBlob(blob => {
+            cv.width = cv.height = 0;  // liberar canvas
+            URL.revokeObjectURL(url);
+            if (!blob) return resolve(file);
+            if (blob.size >= file.size && file.size <= maxBytes) return resolve(file);
+            resolve(new File([blob], (file.name.replace(/\.[^.]+$/, '') || 'foto') + '.jpg', { type: 'image/jpeg' }));
+          }, 'image/jpeg', JPEG_QUALITY);
+        } catch (err) {
+          URL.revokeObjectURL(url);
+          if (file.size <= maxBytes) resolve(file);
+          else reject(err);
+        }
+      }, 80);  // ← este delay es el fix clave para iOS/Safari
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      if (file.size <= maxBytes) resolve(file);
+      else reject(new Error('no se pudo leer la imagen'));
+    };
+    img.src = url;
+  });
 }
 
 async function uploadOne(file, author) {

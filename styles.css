@@ -389,6 +389,21 @@
     .juego-lock { display: block; margin-top: 0.9rem; font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.04em; }
     @media (max-width: 600px) { .juego-card { width: 240px; } }
 
+    /* ── Tarjeta con candado encima (solo cubre ESA tarjeta) ── */
+    .juego-wrap { position: relative; display: flex; flex: 0 0 auto; margin-right: 3rem; }
+    .juego-wrap > .juego-card { margin-right: 0; flex: 1 1 auto; }
+    .juego-overlay {
+      display: none; position: absolute; inset: 0; z-index: 5;
+      flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem;
+      background: rgba(4,6,15,0.86); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      border: 1px dashed rgba(196,168,130,0.35); border-radius: 2px;
+      text-align: center; padding: 1rem; cursor: not-allowed;
+    }
+    .juego-wrap.locked .juego-overlay { display: flex; }
+    .juego-overlay-icon { font-size: 2.2rem; }
+    .juego-overlay-title { font-family: 'New Rocker', system-ui; font-size: 1.05rem; color: var(--star); letter-spacing: 0.05em; }
+    .juego-overlay-text { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+
   /* ── FOTOS ── */
   .sectionfoto-text {
     text-align: center;
@@ -803,6 +818,27 @@
     border-top: 3px solid var(--signal);
     border-radius: 1px;
   }
+
+  .alias-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  background: rgba(196,168,130,0.08);
+  border: 1px solid rgba(196,168,130,0.35);
+  color: var(--star);
+  text-decoration: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+}
+
+.alias-btn:hover {
+  background: rgba(196,168,130,0.15);
+  border-color: var(--star);
+  transform: translateY(-1px);
+}
 
   .btn-secondary {
     display: inline-block;
